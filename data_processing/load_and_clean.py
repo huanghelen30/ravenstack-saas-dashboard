@@ -20,7 +20,11 @@ def load_accounts():
     
     # Drop rows without signup_date
     df = df.dropna(subset=["signup_date"])
-    
+
+    # Add derived time fields
+    df["signup_month"] = df["signup_date"].dt.to_period("M").astype(str)
+    df["signup_quarter"] = df["signup_date"].dt.to_period("Q").astype(str)
+
     assert df["account_id"].isna().sum() == 0, "Missing account_id"
     assert df["signup_date"].isna().sum() == 0, "Missing signup_date"
     assert (df["seats"] >= 0).all(), "Negative seat counts found"
