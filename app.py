@@ -21,4 +21,5 @@ accounts_df_cleaned = load_accounts()
 st.subheader("Cleaned Accounts Data")
 st.dataframe(accounts_df_cleaned.head())
 
+st.subheader("Schema Check")
 st.write(accounts_df_cleaned.dtypes)
