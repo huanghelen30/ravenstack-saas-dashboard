@@ -15,13 +15,41 @@ active_accounts_df = active_accounts(accounts_df_cleaned)
 churn_plan_df = churn_by_plan_tier(accounts_df_cleaned)
 signup_growth_monthly_df = signup_growth(accounts_df_cleaned, period="month")
 
-st.subheader("Core Metrics")
-st.metric("Total Accounts", len(accounts_df_cleaned))
-st.metric("Active Accounts", len(active_accounts_df))
-st.metric("Churn Rate", f"{churn_rate(accounts_df_cleaned):.1%}")
+st.subheader("Core KPIs")
+st.caption("Account health, churn and growth overview")
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric(
+        "Total Accounts", 
+        f"{len(accounts_df_cleaned):,}"
+    )
+
+with col2:
+    st.metric(
+        "Active Accounts", 
+        f"{len(active_accounts_df):,}"
+    )
+
+with col3:
+    st.metric(
+        "Churn Rate", 
+        f"{churn_rate(accounts_df_cleaned):.1%}"
+    )
 
 st.subheader("Churn Rate by Plan Tier")
+st.caption("Identifies which plans are driving customer loss")
 st.dataframe(churn_plan_df)
 
-st.subheader("Signup Growth (Monthly)")
-st.line_chart(signup_growth_monthly_df.set_index("signup_month")["new_accounts"])
+
+st.subheader("Signup Growth Over Time")
+st.caption("Monthly new account creation")
+
+if signup_growth_monthly_df.empty:
+    st.info("No signup data available.")
+else:
+    st.line_chart(
+        signup_growth_monthly_df
+        .set_index("signup_month")["new_accounts"]
+    )

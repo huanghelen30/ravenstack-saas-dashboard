@@ -17,9 +17,22 @@ def churn_by_plan_tier(df):
     )
 
 def signup_growth(df, period="month"):
+    if df.empty:
+        return pd.DataFrame(columns=["signup_month", "new_accounts"])
+
     if period == "month":
-        return df.groupby("signup_month")["account_id"].count().reset_index(name="new_accounts")
+        out = (
+            df.groupby("signup_month")["account_id"]
+            .count()
+            .reset_index(name="new_accounts")
+        )
     elif period == "quarter":
-        return df.groupby("signup_quarter")["account_id"].count().reset_index(name="new_accounts")
+        out = (
+            df.groupby("signup_quarter")["account_id"]
+            .count()
+            .reset_index(name="new_accounts")
+        )
     else:
-        raise ValueError("Unsupported Period")
+        raise ValueError("Unsupported period")
+
+    return out
